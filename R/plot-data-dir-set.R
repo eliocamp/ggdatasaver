@@ -12,6 +12,6 @@
 #' explicitly for the package to work.
 #'
 #' @export
-plot_data_dir_set <- function(dir = NULL) {
+save_plot_data_in <- function(dir = NULL) {
   knitr::opts_chunk$set(plot_data_dir = dir)
 }

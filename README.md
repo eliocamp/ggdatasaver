@@ -31,7 +31,7 @@ ggdatasaver works automatically with knitr. The only thing you need to
 do is to define the directory where the data is saved with
 
 ``` r
-ggdatasaver::plot_data_dir_set("plot-data")
+ggdatasaver::save_plot_data_in("plot-data")
 ```
 
 Then, just create your ggplot2 figures as always. Using a chunk label is
@@ -63,7 +63,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/Rtmp8qJDyG/mpg
+#> /tmp/RtmpTP8HPa/mpg
 #> ├── GeomPoint.csv
 #> └── GeomSmooth.csv
 ```
