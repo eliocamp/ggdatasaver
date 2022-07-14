@@ -43,7 +43,7 @@ ggdatasaver::save_plot_data_in("plot-data")
 
 
 Then, just create your ggplot2 figures as always. 
-Using a chunk label is encouraged because this will be the name of the file. 
+Using a chunk label is encouraged because it will be used to name the file. 
 
 ```{r mpg}
 library(ggplot2)
@@ -95,6 +95,12 @@ For a more dramatic example, take this controur plot of the Old Faithful Geyser 
 ggplot(faithful, aes(x = eruptions, y = waiting)) +
   geom_density_2d()
 ```
+
+(Now there are two zip files in the `plot-data` directory
+```{r}
+fs::dir_tree("plot-data")
+```
+.)
 
 ggdatasaver will save the coordinates that defined the contours, not the observations from which they were computed. 
 

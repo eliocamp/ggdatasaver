@@ -35,7 +35,7 @@ ggdatasaver::save_plot_data_in("plot-data")
 ```
 
 Then, just create your ggplot2 figures as always. Using a chunk label is
-encouraged because this will be the name of the file.
+encouraged because it will be used to name the file.
 
 ``` r
 library(ggplot2)
@@ -64,7 +64,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpAaNDUG/mpg
+#> /tmp/RtmpUwwP9o/mpg
 #> ├── GeomPoint.csv
 #> └── GeomSmooth.csv
 ```
@@ -111,6 +111,17 @@ ggplot(faithful, aes(x = eruptions, y = waiting)) +
 
 <img src="man/figures/README-faithful-density-1.png" width="80%" />
 
+(Now there are two zip files in the `plot-data` directory
+
+``` r
+fs::dir_tree("plot-data")
+#> plot-data
+#> ├── faithful-density.zip
+#> └── mpg.zip
+```
+
+.)
+
 ggdatasaver will save the coordinates that defined the contours, not the
 observations from which they were computed.
 
@@ -124,7 +135,7 @@ ggplot(density, aes(x, y)) +
   geom_path(aes(group = group))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="80%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="80%" />
 
 This makes it safe to share these data, as it doesn’t include any more
 information than what’s in the plot you are already sharing.
