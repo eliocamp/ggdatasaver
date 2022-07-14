@@ -46,7 +46,7 @@ ggplot(mtcars, aes(mpg, disp)) +
 #> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-<img src="man/figures/README-mpg-1.png" width="100%" />
+<img src="man/figures/README-mpg-1.png" width="80%" />
 
 After you knit, you will have a (possibly new) directory with zip files
 with the data of each plot.
@@ -60,10 +60,11 @@ fs::dir_tree("plot-data")
 Inside that zip file there will be a csv file for each layer.
 
 ``` r
+# Unzip the contents of mpg.zip into a temporary directory. 
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpTP8HPa/mpg
+#> /tmp/RtmpAaNDUG/mpg
 #> ├── GeomPoint.csv
 #> └── GeomSmooth.csv
 ```
@@ -94,7 +95,39 @@ ggplot(smooth, aes(x, y)) +
   geom_line(aes(colour = I(colour), size = I(size)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="80%" />
+
+(Setting `plot_data_dir` to `NULL` will suppress data-saving for that
+chunk.)
+
+As you can see, only the coordinates of each geom are saved, not the
+underlying data. For a more dramatic example, take this controur plot of
+the Old Faithful Geyser Data.
+
+``` r
+ggplot(faithful, aes(x = eruptions, y = waiting)) +
+  geom_density_2d()
+```
+
+<img src="man/figures/README-faithful-density-1.png" width="80%" />
+
+ggdatasaver will save the coordinates that defined the contours, not the
+observations from which they were computed.
+
+``` r
+dir <- file.path(tempdir(), "faithful-density")
+utils::unzip("plot-data/faithful-density.zip", exdir = dir)
+
+density <- read.csv(file.path(dir, "GeomDensity2d.csv"))
+
+ggplot(density, aes(x, y)) +
+  geom_path(aes(group = group))
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="80%" />
+
+This makes it safe to share these data, as it doesn’t include any more
+information than what’s in the plot you are already sharing.
 
 ## Limitations
 

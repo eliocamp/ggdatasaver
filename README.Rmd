@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "80%"
 )
 ```
 
@@ -51,10 +51,7 @@ library(ggplot2)
 ggplot(mtcars, aes(mpg, disp)) +
   geom_point() +
   geom_smooth()
-  
-```
-```{r, include = FALSE}
-ggdatasaver::save_plot_data_in(NULL)
+
 ```
 
 After you knit, you will have a (possibly new) directory with zip files with the data of each plot. 
@@ -66,6 +63,7 @@ fs::dir_tree("plot-data")
 Inside that zip file there will be a csv file for each layer. 
 
 ```{r}
+# Unzip the contents of mpg.zip into a temporary directory. 
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg.zip", exdir = dir)
 fs::dir_tree(dir)
@@ -81,13 +79,36 @@ knitr::kable(head(smooth))
 
 And the line can be reconstructed exactly from these data. 
 
-```{r}
+```{r, plot_data_dir = NULL}
 ggplot(smooth, aes(x, y)) + 
   geom_ribbon(aes(ymin = ymin, ymax = ymax, fill = I(fill), alpha = I(alpha))) +
   geom_line(aes(colour = I(colour), size = I(size)))
 ```
 
+(Setting `plot_data_dir` to `NULL` will suppress data-saving for that chunk.)
 
+As you can see, only the coordinates of each geom are saved, not the underlying data. 
+For a more dramatic example, take this controur plot of the Old Faithful Geyser Data.
+
+
+```{r faithful-density}
+ggplot(faithful, aes(x = eruptions, y = waiting)) +
+  geom_density_2d()
+```
+
+ggdatasaver will save the coordinates that defined the contours, not the observations from which they were computed. 
+
+```{r, plot_data_dir = NULL}
+dir <- file.path(tempdir(), "faithful-density")
+utils::unzip("plot-data/faithful-density.zip", exdir = dir)
+
+density <- read.csv(file.path(dir, "GeomDensity2d.csv"))
+
+ggplot(density, aes(x, y)) +
+  geom_path(aes(group = group))
+```
+
+This makes it safe to share these data, as it doesn't include any more information than what's in the plot you are already sharing. 
 
 ```{r, include = FALSE}
 unlink("plot-data", recursive = TRUE)
