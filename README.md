@@ -54,7 +54,7 @@ with the data of each plot.
 ``` r
 fs::dir_tree("plot-data")
 #> plot-data
-#> └── mpg.zip
+#> └── mpg-1.zip
 ```
 
 Inside that zip file there will be a csv file for each layer.
@@ -62,9 +62,9 @@ Inside that zip file there will be a csv file for each layer.
 ``` r
 # Unzip the contents of mpg.zip into a temporary directory. 
 dir <- file.path(tempdir(), "mpg")
-utils::unzip("plot-data/mpg.zip", exdir = dir)
+utils::unzip("plot-data/mpg-1.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpUwwP9o/mpg
+#> /tmp/RtmpSKG8kb/mpg
 #> ├── GeomPoint.csv
 #> └── GeomSmooth.csv
 ```
@@ -116,8 +116,8 @@ ggplot(faithful, aes(x = eruptions, y = waiting)) +
 ``` r
 fs::dir_tree("plot-data")
 #> plot-data
-#> ├── faithful-density.zip
-#> └── mpg.zip
+#> ├── faithful-density-1.zip
+#> └── mpg-1.zip
 ```
 
 .)
@@ -127,7 +127,7 @@ observations from which they were computed.
 
 ``` r
 dir <- file.path(tempdir(), "faithful-density")
-utils::unzip("plot-data/faithful-density.zip", exdir = dir)
+utils::unzip("plot-data/faithful-density-1.zip", exdir = dir)
 
 density <- read.csv(file.path(dir, "GeomDensity2d.csv"))
 
@@ -145,8 +145,6 @@ information than what’s in the plot you are already sharing.
 ggdatasaver has only been tested on simple plots although there’s no
 reason it should work work with more complicated ones. Hoever, patchwork
 / cowplot plots probably wont work as expected.
-
-For now, the package only works with one plot per chunk.
 
 When using ggdatasaver plots are built twice; once when saving the data
 and once when drawing the plot. This shouldn’t be an issue most of the

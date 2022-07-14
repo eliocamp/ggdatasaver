@@ -63,8 +63,19 @@ save_plot_data <- function(plot, name = "plot", dir = ".") {
 }
 
 knitr_print.gg <- function(x, options, ...) {
+
   if (!is.null(options$plot_data_dir)) {
-    save_plot_data(x, options$label, options$plot_data_dir)
+    last_label <- get_last_label()
+    set_last_label(options$label)
+
+    if (last_label == options$label) {  # We have many figures
+      n_figs <- get_n_labels() + 1
+    } else {
+      n_figs <- 1
+    }
+    set_n_labels(n_figs)
+    label <- paste0(options$label, "-", n_figs)
+    save_plot_data(x, label, options$plot_data_dir)
   }
 
   NextMethod("knitr_print")
