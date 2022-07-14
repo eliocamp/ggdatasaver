@@ -93,3 +93,14 @@ ggplot(smooth, aes(x, y)) +
 unlink("plot-data", recursive = TRUE)
 ```
 
+
+## Limitations
+
+
+ggdatasaver has only been tested on simple plots although there's no reason it should work work with more complicated ones.
+Hoever, patchwork / cowplot plots probably wont work as expected. 
+
+For now, the package only works with one plot per chunk. 
+
+When using ggdatasaver plots are built twice; once when saving the data and once when drawing the plot. 
+This shouldn't be an issue most of the time unless your plot requires heavy computation. 

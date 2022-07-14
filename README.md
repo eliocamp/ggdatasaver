@@ -63,7 +63,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpHMyi4g/mpg
+#> /tmp/Rtmp8qJDyG/mpg
 #> ├── GeomPoint.csv
 #> └── GeomSmooth.csv
 ```
@@ -95,3 +95,15 @@ ggplot(smooth, aes(x, y)) +
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+## Limitations
+
+ggdatasaver has only been tested on simple plots although there’s no
+reason it should work work with more complicated ones. Hoever, patchwork
+/ cowplot plots probably wont work as expected.
+
+For now, the package only works with one plot per chunk.
+
+When using ggdatasaver plots are built twice; once when saving the data
+and once when drawing the plot. This shouldn’t be an issue most of the
+time unless your plot requires heavy computation.
