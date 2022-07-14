@@ -1,0 +1,73 @@
+#' Saves data associated with a ggplot plot
+#'
+#' Takes a ggplot and saves a zip file with a single csv
+#' file for each layer of the plot with the data used by
+#' said layer
+#'
+#' @param plot A ggplot2 plot.
+#' @param name The name used as file name.
+#' @param dir Directory where to put the file. If NUL
+#'
+#'
+#' In general, you don't need to call this function
+#' explicitly, since it will be used automatically by knitr
+#' if the plot data directory is set (see [plot_data_dir_set]).
+#'
+#' Paraphrasing Voltaire, if `dir` doesn't exist,
+#' it will be created. If the file already exists, it will
+#' be overwritten without a warning. This is because this
+#' function is supposed to run with knitr every time a document
+#' is knit and will update the data to the latest version.
+#'
+#' @export
+save_plot_data <- function(plot, name = "plot", dir = ".") {
+
+  if (!dir.exists(dir)) {
+    dir.create(dir)
+  }
+
+  # Build the ggplot2 plot.
+  gg <- suppressMessages(suppressWarnings(ggplot2::ggplot_build(plot)))
+
+  # Get the data of each layer into a list
+  datas <- gg[["data"]]
+
+  # Get the name of the geom in each layer
+  geom_names <- vapply(gg[["plot"]][["layers"]],
+                       function(x) class(x[["geom"]])[1],
+                       FUN.VALUE = character(1)
+  )
+  geom_names <- make.unique(geom_names, sep = "_")
+
+  # Save the data of each label into its own file and
+  # zip them.
+  temp <- tempdir(TRUE)
+  files <- vapply(seq_along(datas),
+                  function(l) {
+                    file <- file.path(temp, paste0(geom_names[l], ".csv"))
+                    utils::write.csv(datas[[l]], file, row.names = FALSE)
+                    file
+                  },
+                  FUN.VALUE = character(1)
+  )
+
+  zipfile <- file.path(dir, paste0(name, ".zip"))
+  if (file.exists(zipfile)) {
+    file.remove(zipfile)
+  }
+  utils::zip(zipfile,
+      files = files,
+      flags = "-r9Xj"  # To "flatten" the files
+  )
+  return(invisible(NULL))
+}
+
+knitr_print.gg <- function(x, options, ...) {
+  if (!is.null(options$plot_data_dir)) {
+    save_plot_data(x, options$label, options$plot_data_dir)
+  }
+
+  NextMethod("knitr_print")
+}
+
+

@@ -1,0 +1,95 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ggdatasaver
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/ggdatasaver)](https://CRAN.R-project.org/package=ggdatasaver)
+<!-- badges: end -->
+
+The goal of ggdatasaver is to automatically save the data associated with your plots for you to share as supplementary material. 
+Other people can then use that data instead of digitising your plots. 
+Because only the data already being published as a plot is saved, there should be fewer privacy or legal complications.
+
+## Installation
+
+You can install the development version of ggdatasaver like so:
+
+``` r
+remotes::install_github("eliocamp/ggdatasaver")
+```
+
+## Example
+
+ggdatasaver works automatically with knitr. 
+The only thing you need to do is to define the directory where the data is saved with
+
+```{r}
+ggdatasaver::plot_data_dir_set("plot-data")
+```
+
+
+Then, just create your ggplot2 figures as always. 
+Using a chunk label is encouraged because this will be the name of the file. 
+
+```{r mpg}
+library(ggplot2)
+
+ggplot(mtcars, aes(mpg, disp)) +
+  geom_point() +
+  geom_smooth()
+  
+```
+```{r, include = FALSE}
+ggdatasaver::plot_data_dir_set(NULL)
+```
+
+After you knit, you will have a (possibly new) directory with zip files with the data of each plot. 
+
+```{r}
+fs::dir_tree("plot-data")
+```
+
+Inside that zip file there will be a csv file for each layer. 
+
+```{r}
+dir <- file.path(tempdir(), "mpg")
+utils::unzip("plot-data/mpg.zip", exdir = dir)
+fs::dir_tree(dir)
+```
+
+The data of each layer is only the one used to draw the geometry. 
+For example, GeomSmooth.csv has the coordinates of the fit and some other aesthetic information
+
+```{r}
+smooth <- read.csv(file.path(dir, "GeomSmooth.csv"))
+knitr::kable(head(smooth))
+```
+
+And the line can be reconstructed exactly from these data. 
+
+```{r}
+ggplot(smooth, aes(x, y)) + 
+  geom_ribbon(aes(ymin = ymin, ymax = ymax, fill = I(fill), alpha = I(alpha))) +
+  geom_line(aes(colour = I(colour), size = I(size)))
+```
+
+
+
+```{r, include = FALSE}
+unlink("plot-data", recursive = TRUE)
+```
+
