@@ -39,8 +39,7 @@ save_plot_data <- function(plot, name = "plot", dir = ".") {
   )
   geom_names <- make.unique(geom_names, sep = "_")
 
-  # Save the data of each label into its own file and
-  # zip them.
+  # Save the data of each label into its own file
   temp <- tempdir(TRUE)
   files <- vapply(seq_along(datas),
                   function(l) {
@@ -50,7 +49,13 @@ save_plot_data <- function(plot, name = "plot", dir = ".") {
                   },
                   FUN.VALUE = character(1)
   )
-
+  
+  # Save the layout parameters. 
+  layout_file <- file.path(temp, "layout.csv")
+  utils::write.csv(gg[["layout"]][["layout"]], layout_file, row.names = FALSE)
+  files <- c(files, layout_file)
+  
+  # zip them. 
   zipfile <- file.path(dir, paste0(name, ".zip"))
   if (file.exists(zipfile)) {
     file.remove(zipfile)
