@@ -11,7 +11,7 @@
 #'
 #' In general, you don't need to call this function
 #' explicitly, since it will be used automatically by knitr
-#' if the plot data directory is set (see [plot_data_dir_set]).
+#' if the plot data directory is set (see [save_plot_data_in()]).
 #'
 #' Paraphrasing Voltaire, if `dir` doesn't exist,
 #' it will be created. If the file already exists, it will
@@ -21,7 +21,6 @@
 #'
 #' @export
 save_plot_data <- function(plot, name = "plot", dir = ".") {
-
   if (!dir.exists(dir)) {
     dir.create(dir)
   }
@@ -68,7 +67,6 @@ save_plot_data <- function(plot, name = "plot", dir = ".") {
 }
 
 knitr_print.gg <- function(x, options, ...) {
-
   if (!is.null(options$plot_data_dir)) {
     last_label <- get_last_label()
     set_last_label(options$label)

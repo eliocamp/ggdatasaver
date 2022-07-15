@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "80%"
+  out.width = "50%"
 )
 ```
 
@@ -45,14 +45,14 @@ ggdatasaver::save_plot_data_in("plot-data")
 Then, just create your ggplot2 figures as always. 
 Using a chunk label is encouraged because it will be used to name the file. 
 
-```{r mpg}
+```{r mpg, fig.alt = "Scatterplot of mpg vs disp with a fitted smooth line showing a decreasing relationship."}
 library(ggplot2)
 
 ggplot(mtcars, aes(mpg, disp)) +
   geom_point() +
   geom_smooth()
-
 ```
+
 
 After you knit, you will have a (possibly new) directory with zip files with the data of each plot. 
 
@@ -79,7 +79,7 @@ knitr::kable(head(smooth))
 
 And the line can be reconstructed exactly from these data. 
 
-```{r, plot_data_dir = NULL}
+```{r, plot_data_dir = NULL, fig.alt = "The same figure from before but only the smooth fit."}
 ggplot(smooth, aes(x, y)) + 
   geom_ribbon(aes(ymin = ymin, ymax = ymax, fill = I(fill), alpha = I(alpha))) +
   geom_line(aes(colour = I(colour), size = I(size)))
@@ -91,7 +91,7 @@ As you can see, only the coordinates of each geom are saved, not the underlying 
 For a more dramatic example, take this controur plot of the Old Faithful Geyser Data.
 
 
-```{r faithful-density}
+```{r faithful-density, fig.alt = "2D density contours of eruptions vs. waiting shoing two distinct areas of high density, one centered at ~4.5 eruptions and ~80 waiting and one at 2 eruptions and 55 waiting."}
 ggplot(faithful, aes(x = eruptions, y = waiting)) +
   geom_density_2d()
 ```
@@ -104,7 +104,7 @@ fs::dir_tree("plot-data")
 
 ggdatasaver will save the coordinates that defined the contours, not the observations from which they were computed. 
 
-```{r, plot_data_dir = NULL}
+```{r, plot_data_dir = NULL, fig.alt = "The same plot from before."}
 dir <- file.path(tempdir(), "faithful-density")
 utils::unzip("plot-data/faithful-density-1.zip", exdir = dir)
 
@@ -116,16 +116,57 @@ ggplot(density, aes(x, y)) +
 
 This makes it safe to share these data, as it doesn't include any more information than what's in the plot you are already sharing. 
 
+
+The panel specification of each plot is saved in layout.csv, which holds the location (ROW and COLumn) information of each panel as well as the value of the variables 
+
+```{r mpg-facets, fig.alt = "Scatterplot of displ vs cty with 12 panels organised in 2 rows and 4 columns according to the values of drv and cyl."}
+ggplot(mpg, aes(displ, cty)) +
+  geom_point() +
+  facet_grid(drv ~ cyl)
+```
+
+```{r}
+dir <- file.path(tempdir(), "mpg-facets")
+utils::unzip("plot-data/mpg-facets-1.zip", exdir = dir)
+
+layout <- read.csv(file.path(dir, "layout.csv"))
+
+head(layout)
+```
+
+
+
 ```{r, include = FALSE}
 unlink("plot-data", recursive = TRUE)
 ```
 
+## Use cases
+
+### Accessibilty
+
+Academic journals almost never have any infrastructure that allows for alt text for figures. 
+For blind people, having access to the raw data is better than nothing. 
+
+With the data they could print a tactile version (for simple plots), compute statistics to get a better sense of the relationships, or just read the raw data. 
+For fitted curves, which usually are not adequately described in text, they could get the data, fit the curve and read the curve parameters. 
+
+### Reproducibilty
+
+An important aspect of reproducibility is having access to data, but this is easier said than done. 
+Huge data is expensive to store and serve, and many types of data carry privacy concerns (such as patient data) or licencing issues (like secret data). 
+Another barrier to data sharing is organising it in useful way (see [The Turing Way's Guide to Reproducible Research](https://the-turing-way.netlify.app/reproducible-research/open/open-data.html#barriers-to-data-sharing)). 
+
+While not perfect, sharing the small snippets of data that are the coordinates of plot geometries can be a good compromise. 
+These data are generally small and already in a tabular format, so it's technically easy to share in a repository or as supplemental material. 
+And because is data that is already implicitly shared as an image, it doesn't carry privacy and licencing concerns. 
+(I'm not a lawyer, so don't take that as legal advice.)
+
+And even when the raw data is shared, sharing also the plot data can be useful for researchers that want to reproduce or reanalise small chunks of your results but don't want or can't download the original data and run the code. 
 
 ## Limitations
 
-
 ggdatasaver has only been tested on simple plots although there's no reason it should work work with more complicated ones.
-Hoever, patchwork / cowplot plots probably wont work as expected. 
+However, patchwork / cowplot plots probably won't work as expected. 
 
 When using ggdatasaver plots are built twice; once when saving the data and once when drawing the plot. 
 This shouldn't be an issue most of the time unless your plot requires heavy computation. 

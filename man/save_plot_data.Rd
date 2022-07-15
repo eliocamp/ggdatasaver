@@ -15,7 +15,7 @@ save_plot_data(plot, name = "plot", dir = ".")
 
 In general, you don't need to call this function
 explicitly, since it will be used automatically by knitr
-if the plot data directory is set (see \link{plot_data_dir_set}).
+if the plot data directory is set (see \code{\link[=save_plot_data_in]{save_plot_data_in()}}).
 
 Paraphrasing Voltaire, if \code{dir} doesn't exist,
 it will be created. If the file already exists, it will
