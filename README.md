@@ -64,7 +64,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg-1.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/Rtmp4KXCdX/mpg
+#> /tmp/RtmpY8W9DL/mpg
 #> ├── GeomPoint.csv
 #> ├── GeomSmooth.csv
 #> └── layout.csv
@@ -185,11 +185,32 @@ curve parameters.
 
 ### Reproducibilty
 
+An important aspect of reproducibility is having access to data, but
+this is easier said than done. Huge data is expensive to store and
+serve, and many types of data carry privacy concerns (such as patient
+data) or licencing issues (like secret data). Another barrier to data
+sharing is organising it in useful way (see [The Turing Way’s Guide to
+Reproducible
+Research](https://the-turing-way.netlify.app/reproducible-research/open/open-data.html#barriers-to-data-sharing)).
+
+While not perfect, sharing the small snippets of data that are the
+coordinates of plot geometries can be a good compromise. These data are
+generally small and already in a tabular format, so it’s technically
+easy to share in a repository or as supplemental material. And because
+is data that is already implicitly shared as an image, it doesn’t carry
+privacy and licencing concerns. (I’m not a lawyer, so don’t take that as
+legal advice.)
+
+And even when the raw data is shared, sharing also the plot data can be
+useful for researchers that want to reproduce or reanalise small chunks
+of your results but don’t want or can’t download the original data and
+run the code.
+
 ## Limitations
 
 ggdatasaver has only been tested on simple plots although there’s no
-reason it should work work with more complicated ones. Hoever, patchwork
-/ cowplot plots probably wont work as expected.
+reason it should work work with more complicated ones. However,
+patchwork / cowplot plots probably won’t work as expected.
 
 When using ggdatasaver plots are built twice; once when saving the data
 and once when drawing the plot. This shouldn’t be an issue most of the
