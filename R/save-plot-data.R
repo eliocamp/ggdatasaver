@@ -21,6 +21,20 @@
 #'
 #' @export
 save_plot_data <- function(plot, name = "plot", dir = ".") {
+  UseMethod("save_plot_data")
+}
+
+#' @export
+save_plot_data.patchwork <- function(plot, name = "plot", dir = ".") {
+  n_patches <- length(plot$patches$plots) +1
+
+  for (i in seq_len(n_patches)) {
+    save_plot_data(plot[[i]], name = paste0(name, "-", i), dir = dir)  
+  }
+}
+
+#' @export
+save_plot_data.gg <- function(plot, name = "plot", dir = ".") {
   if (!dir.exists(dir)) {
     dir.create(dir)
   }
@@ -36,6 +50,7 @@ save_plot_data <- function(plot, name = "plot", dir = ".") {
                        function(x) class(x[["geom"]])[1],
                        FUN.VALUE = character(1)
   )
+
   geom_names <- make.unique(geom_names, sep = "_")
 
   # Save the data of each label into its own file
@@ -43,7 +58,7 @@ save_plot_data <- function(plot, name = "plot", dir = ".") {
   files <- vapply(seq_along(datas),
                   function(l) {
                     file <- file.path(temp, paste0(geom_names[l], ".csv"))
-                    utils::write.csv(datas[[l]], file, row.names = FALSE)
+                    utils::write.csv(parse_list_columns(datas[[l]]), file, row.names = FALSE)
                     file
                   },
                   FUN.VALUE = character(1)
