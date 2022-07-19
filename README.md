@@ -64,7 +64,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg-1.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpJZ4bNh/mpg
+#> /tmp/RtmpUs5xAt/mpg
 #> ├── GeomPoint.csv
 #> ├── GeomSmooth.csv
 #> └── layout.csv
@@ -215,8 +215,9 @@ reason it should work work with more complicated ones.
 
 When using ggdatasaver plots are built twice; once when saving the data
 and once when drawing the plot. This shouldn’t be an issue most of the
-time unless your plot requires heavy computation. Only data from ggplot2
-plots are exported. Base plots or lattice plots are not supported; only
-because I don’t know how to go about it. If you have any idea of how to
-implement ggdatasaver for base plots, open an issue and let’s talk about
-it!
+time unless your plot requires heavy computation.
+
+Only data from ggplot2 plots are exported. Base plots or lattice plots
+are not supported; only because I don’t know how to go about it. If you
+have any idea of how to implement ggdatasaver for base plots, open an
+issue and let’s talk about it!
