@@ -64,7 +64,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg-1.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpY8W9DL/mpg
+#> /tmp/RtmpCYewtw/mpg
 #> ├── GeomPoint.csv
 #> ├── GeomSmooth.csv
 #> └── layout.csv
@@ -209,8 +209,9 @@ run the code.
 ## Limitations
 
 ggdatasaver has only been tested on simple plots although there’s no
-reason it should work work with more complicated ones. However,
-patchwork / cowplot plots probably won’t work as expected.
+reason it should work work with more complicated ones.
+[patchwork](https://patchwork.data-imaginist.com/) is supported but not
+[cowplot](https://wilkelab.org/cowplot/).
 
 When using ggdatasaver plots are built twice; once when saving the data
 and once when drawing the plot. This shouldn’t be an issue most of the

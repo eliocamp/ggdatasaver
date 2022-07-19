@@ -41,7 +41,6 @@ The only thing you need to do is to define the directory where the data is saved
 ggdatasaver::save_plot_data_in("plot-data")
 ```
 
-
 Then, just create your ggplot2 figures as always. 
 Using a chunk label is encouraged because it will be used to name the file. 
 
@@ -135,7 +134,6 @@ head(layout)
 ```
 
 
-
 ```{r, include = FALSE}
 unlink("plot-data", recursive = TRUE)
 ```
@@ -165,8 +163,8 @@ And even when the raw data is shared, sharing also the plot data can be useful f
 
 ## Limitations
 
-ggdatasaver has only been tested on simple plots although there's no reason it should work work with more complicated ones.
-However, patchwork / cowplot plots probably won't work as expected. 
+ggdatasaver has only been tested on simple plots although there's no reason it should work work with more complicated ones. 
+[patchwork](https://patchwork.data-imaginist.com/) is supported but not [cowplot](https://wilkelab.org/cowplot/). 
 
 When using ggdatasaver plots are built twice; once when saving the data and once when drawing the plot. 
 This shouldn't be an issue most of the time unless your plot requires heavy computation. 
