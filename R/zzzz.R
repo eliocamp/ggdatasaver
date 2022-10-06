@@ -12,7 +12,7 @@
 # from https://stackoverflow.com/questions/48024266/save-a-data-frame-with-list-columns-as-csv-file
 set_lists_to_chars <- function(x) {
   if (inherits(x, "list")) {
-    y <- paste(unlist(x[1]), sep="", collapse=", ")
+    y <- paste(unlist(x[1]), sep = "", collapse = ", ")
   } else {
     y <- x 
   }
