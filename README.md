@@ -9,6 +9,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggdatasaver)](https://CRAN.R-project.org/package=ggdatasaver)
+[![R-CMD-check](https://github.com/eliocamp/ggdatasaver/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eliocamp/ggdatasaver/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of ggdatasaver is to automatically save the data associated
@@ -46,7 +47,7 @@ ggplot(mtcars, aes(mpg, disp)) +
 #> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-<img src="man/figures/README-mpg-1.png" title="Scatterplot of mpg vs disp with a fitted smooth line showing a decreasing relationship." alt="Scatterplot of mpg vs disp with a fitted smooth line showing a decreasing relationship." width="50%" />
+<img src="man/figures/README-mpg-1.png" alt="Scatterplot of mpg vs disp with a fitted smooth line showing a decreasing relationship." width="50%" />
 
 After you knit, you will have a (possibly new) directory with zip files
 with the data of each plot.
@@ -64,7 +65,7 @@ Inside that zip file there will be a csv file for each layer.
 dir <- file.path(tempdir(), "mpg")
 utils::unzip("plot-data/mpg-1.zip", exdir = dir)
 fs::dir_tree(dir)
-#> /tmp/RtmpUs5xAt/mpg
+#> /tmp/RtmpUnBAEX/mpg
 #> ├── GeomPoint.csv
 #> ├── GeomSmooth.csv
 #> └── layout.csv
@@ -96,7 +97,7 @@ ggplot(smooth, aes(x, y)) +
   geom_line(aes(colour = I(colour), size = I(size)))
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" title="The same figure from before but only the smooth fit." alt="The same figure from before but only the smooth fit." width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" alt="The same figure from before but only the smooth fit." width="50%" />
 
 (Setting `plot_data_dir` to `NULL` will suppress data-saving for that
 chunk.)
@@ -110,7 +111,7 @@ ggplot(faithful, aes(x = eruptions, y = waiting)) +
   geom_density_2d()
 ```
 
-<img src="man/figures/README-faithful-density-1.png" title="2D density contours of eruptions vs. waiting shoing two distinct areas of high density, one centered at ~4.5 eruptions and ~80 waiting and one at 2 eruptions and 55 waiting." alt="2D density contours of eruptions vs. waiting shoing two distinct areas of high density, one centered at ~4.5 eruptions and ~80 waiting and one at 2 eruptions and 55 waiting." width="50%" />
+<img src="man/figures/README-faithful-density-1.png" alt="2D density contours of eruptions vs. waiting shoing two distinct areas of high density, one centered at ~4.5 eruptions and ~80 waiting and one at 2 eruptions and 55 waiting." width="50%" />
 
 (Now there are two zip files in the `plot-data` directory
 
@@ -136,7 +137,7 @@ ggplot(density, aes(x, y)) +
   geom_path(aes(group = group))
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" title="The same plot from before." alt="The same plot from before." width="50%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="The same plot from before." width="50%" />
 
 This makes it safe to share these data, as it doesn’t include any more
 information than what’s in the plot you are already sharing.
@@ -151,7 +152,7 @@ ggplot(mpg, aes(displ, cty)) +
   facet_grid(drv ~ cyl)
 ```
 
-<img src="man/figures/README-mpg-facets-1.png" title="Scatterplot of displ vs cty with 12 panels organised in 2 rows and 4 columns according to the values of drv and cyl." alt="Scatterplot of displ vs cty with 12 panels organised in 2 rows and 4 columns according to the values of drv and cyl." width="50%" />
+<img src="man/figures/README-mpg-facets-1.png" alt="Scatterplot of displ vs cty with 12 panels organised in 2 rows and 4 columns according to the values of drv and cyl." width="50%" />
 
 ``` r
 dir <- file.path(tempdir(), "mpg-facets")
